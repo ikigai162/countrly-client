@@ -17,8 +17,7 @@ export const getRankByUserId = async (userId: number) => {
     const response = await axios.get(`${API_URL}/${userId}`);
     return response.data;
   } catch (error) {
-    console.error(
-      `There was an error fetching rank for user ${userId}!`, error);
+    console.error( `There was an error fetching rank for user ${userId}!`, error);
     throw error;
   }
 };

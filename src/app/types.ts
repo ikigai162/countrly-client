@@ -4,3 +4,9 @@ export type User = {
   password: string;
   name?: string;
 };
+
+export interface CountryDTO {
+  id: number;
+  name: string;
+  shape: string;
+}
