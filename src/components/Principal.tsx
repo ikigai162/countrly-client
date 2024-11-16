@@ -2,46 +2,52 @@ import React, { useEffect, useState } from "react";
 import { icons } from "../img/constants";
 import Indications from "../constants/Indications";
 
-import { getAllCountries } from "../app/countryService";
-import { CountryDTO } from "../app/types";
-
 import "./Principal.css";
 
 const Principal: React.FC = () => {
   const [countries, setCountries] = useState([]);
+  const [currentShape, setCurrentShape] = useState("");
+  const [countryName, setCountryName] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [message, setMessage] = useState("");
-  const [shape, setShape] = useState<string | null>(null);
 
   useEffect(() => {
-      const fetchCountries = async () => {
-          try {
-              const data = await getAllCountries();
-              setCountries(data);
-          } catch (error) {
-              console.error("Failed to fetch countries");
-          }
-      };
-
-      fetchCountries();
+    fetch("https://exciting-wonder-production.up.railway.app/country")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error with status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("API response:", data);
+        setCountries(data);
+        selectRandomCountry(data);
+      })
+      .catch((error) => console.error("Error at fetching countries:", error));
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
+  const selectRandomCountry = (data) => {
+    const randomCountry = data[Math.floor(Math.random() * data.length)];
+    if (randomCountry?.shape?.image) {
+      const base64Image = `data:image/png;base64,${randomCountry.shape.image}`;
+      setCurrentShape(base64Image);
+      setCountryName(randomCountry.name.toLowerCase());
+    } else {
+      console.error("No shape available");
+    }
+  };
 
-      const country = countries.find(
-          (c: any) => c.name.toLowerCase() === inputValue.toLowerCase()
-      );
+  const handleSubmit = () => {
+    if (inputValue.toLowerCase() === countryName) {
+      setMessage("Correct!");
+    } else {
+      console.info("Wrong! Try again.")
+      setMessage("Wrong! Try again.");
+    }
 
-      if (country) {
-          setMessage("Corect!");
-          /* setShape(country.shape || "Shape not available"); */
-      } else {
-          setMessage("Greșit!");
-          setShape(null);
-      }
-
-      setInputValue(""); // Resetăm input-ul
+    selectRandomCountry(countries);
+    setInputValue("");
   };
 
   return (
@@ -58,14 +64,24 @@ const Principal: React.FC = () => {
       <div className="container-principal">
         <header className="header">
           <h1 className="motto">TAKE YOUR GUESS</h1>
-          <img className="header-img" src={icons.vector1} alt="shape" />
+          {currentShape ? (
+            <img className="header-img" src={currentShape} alt="shape" />
+          ) : (
+            <p>No shape available</p>
+          )}
+
           <input
             className="input"
             type="text"
             placeholder="Enter your answer"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
           <Indications />
-          <button className="submit">submit</button>
+          <button className="submit" onClick={handleSubmit}>
+            Submit
+          </button>
+          <p>{message}</p>
         </header>
       </div>
     </>
