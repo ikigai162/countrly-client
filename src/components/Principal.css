@@ -118,7 +118,6 @@ input {
   background-color: #c4c4c4;
   border-radius: 20px;
   padding: 0 10px;
-  /* Spațiu între margini */
 }
 
 .country img {
@@ -162,4 +161,48 @@ input {
 .submit:hover{
   box-shadow: 0px 0px 100px #CFACFF;
   transition: 0.3s ease-in-out;
+}
+
+.input-wrapper {
+  position: relative;
+  max-width: 400px;
+  margin: 20px auto;
+  color: #000;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 140px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.suggestions li {
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.suggestions li:hover {
+  background-color: #f8f9fa;
 }

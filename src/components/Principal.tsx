@@ -1,14 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, KeyboardEvent } from "react";
 import { icons } from "../img/constants";
 import Indications from "../constants/Indications";
 
 import "./Principal.css";
 
+interface Shape {
+  id: number;
+  image: string;
+}
+
+interface Complexity {
+  id: number;
+  complexity: string;
+}
+
+interface Country {
+  id: number;
+  name: string;
+  complexity: Complexity;
+  shape: Shape;
+}
+
 const Principal: React.FC = () => {
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [currentShape, setCurrentShape] = useState("");
   const [countryName, setCountryName] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [suggestions, setSuggestions] = useState<Country[]>([]);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -19,15 +37,15 @@ const Principal: React.FC = () => {
         }
         return response.json();
       })
-      .then((data) => {
+      .then((data: Country[]) => {
         console.log("API response:", data);
         setCountries(data);
         selectRandomCountry(data);
       })
-      .catch((error) => console.error("Error at fetching countries:", error));
+      .catch((error) => console.error("Error fetching countries:", error));
   }, []);
 
-  const selectRandomCountry = (data) => {
+  const selectRandomCountry = (data: Country[]) => {
     const randomCountry = data[Math.floor(Math.random() * data.length)];
     if (randomCountry?.shape?.image) {
       const base64Image = `data:image/png;base64,${randomCountry.shape.image}`;
@@ -38,16 +56,41 @@ const Principal: React.FC = () => {
     }
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();
+    setInputValue(value);
+
+    if (value) {
+      const filteredCountries = countries.filter((country) =>
+        country.name.toLowerCase().includes(value)
+      );
+      setSuggestions(filteredCountries);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (name: string) => {
+    setInputValue(name);
+    setSuggestions([]);
+  };
+
   const handleSubmit = () => {
     if (inputValue.toLowerCase() === countryName) {
       setMessage("Correct!");
+      selectRandomCountry(countries);
     } else {
-      console.info("Wrong! Try again.")
-      setMessage("Wrong! Try again.");
+      alert("Wrong! Try again.");
     }
 
-    selectRandomCountry(countries);
     setInputValue("");
+    setSuggestions([]);
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
   };
 
   return (
@@ -70,18 +113,36 @@ const Principal: React.FC = () => {
             <p>No shape available</p>
           )}
 
-          <input
-            className="input"
-            type="text"
-            placeholder="Enter your answer"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
+          {/* Input pentru răspuns */}
+          <div className="input-wrapper">
+            <input
+              className="input"
+              type="text"
+              placeholder="Enter your answer"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyUp={handleKeyPress}
+            />
+            {/* Afișarea sugestiilor */}
+            {suggestions.length > 0 && (
+              <ul className="suggestions">
+                {suggestions.map((country) => (
+                  <li
+                    key={country.id}
+                    onClick={() => handleSuggestionClick(country.name)}
+                  >
+                    {country.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <Indications />
           <button className="submit" onClick={handleSubmit}>
             Submit
           </button>
-          <p>{message}</p>
+          <p className="message">{message}</p>
         </header>
       </div>
     </>

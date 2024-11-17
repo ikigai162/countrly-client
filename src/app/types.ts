@@ -10,3 +10,20 @@ export interface CountryDTO {
   name: string;
   shape: string;
 }
+
+interface Shape {
+  id: number;
+  image: string;
+}
+
+interface Complexity {
+  id: number;
+  complexity: string;
+}
+
+interface Country {
+  id: number;
+  name: string;
+  complexity: Complexity;
+  shape: Shape;
+}
