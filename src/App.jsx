@@ -2,6 +2,7 @@ import React from "react";
 
 import Register from "./components/Register";
 import Principal from "./components/Principal";
+import Ranking from './components/Ranking'
 
 import "./App.css";
 

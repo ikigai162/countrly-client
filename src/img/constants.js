@@ -1,5 +1,3 @@
-// src/constants/iconsAndData.js
-
 import graph from "./../img/graph-icon.png";
 import info from "./../img/info-icon.png";
 import podium from "./../img/podium.png";
@@ -17,7 +15,10 @@ import Azerbaidjan from "./../img/Azerbaidjan.png";
 import France from "./../img/France.png";
 import Irland from "./../img/Irland.png";
 
-// Obiect care exportă toate imaginile de iconițe și indicatoare
+import baby from "./../img/baby.png";
+import teen from "./../img/teen.png";
+import mustafa from "./../img/mustafa.png";
+
 export const icons = {
   graph,
   info,
@@ -33,10 +34,18 @@ export const icons = {
   Azerbaidjan,
   France,
   Irland,
+  baby,
+  teen,
+  mustafa,
 };
 
-// Datele pentru indicații, utilizând iconițele din `icons`
 export const indicationsData = [
-  { id: 1, icon: icons.up, label: 'Italy', country: icons.Italy, distance: 3 },
-  { id: 2, icon: icons.up_left, label: 'Azerbaidjan', country: icons.Azerbaidjan, distance: 756 },
+  { id: 1, icon: icons.up, label: "Italy", country: icons.Italy, distance: 3 },
+  {
+    id: 2,
+    icon: icons.up_left,
+    label: "Azerbaidjan",
+    country: icons.Azerbaidjan,
+    distance: 756,
+  },
 ];
