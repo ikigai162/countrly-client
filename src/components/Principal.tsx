@@ -1,6 +1,9 @@
-import React, { useEffect, useState, KeyboardEvent } from "react";
+import React, { useEffect, useState, KeyboardEvent, useRef } from "react";
+import Popup from "reactjs-popup";
+
 import { icons } from "../img/constants";
 import Indications from "../constants/Indications";
+import Ranking from "./Ranking";
 
 import "./Principal.css";
 
@@ -22,12 +25,14 @@ interface Country {
 }
 
 const Principal: React.FC = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const [countries, setCountries] = useState<Country[]>([]);
   const [currentShape, setCurrentShape] = useState("");
   const [countryName, setCountryName] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<Country[]>([]);
-  const [message, setMessage] = useState("");
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
 
   useEffect(() => {
     fetch("https://exciting-wonder-production.up.railway.app/country")
@@ -37,12 +42,12 @@ const Principal: React.FC = () => {
         }
         return response.json();
       })
-      .then((data: Country[]) => {
-        console.log("API response:", data);
+      .then((data) => {
+        /* console.log("API response: ", data); */
         setCountries(data);
         selectRandomCountry(data);
       })
-      .catch((error) => console.error("Error fetching countries:", error));
+      .catch((error) => console.error("Error at fetching countries", error));
   }, []);
 
   const selectRandomCountry = (data: Country[]) => {
@@ -50,7 +55,7 @@ const Principal: React.FC = () => {
     if (randomCountry?.shape?.image) {
       const base64Image = `data:image/png;base64,${randomCountry.shape.image}`;
       setCurrentShape(base64Image);
-      setCountryName(randomCountry.name.toLowerCase());
+      setCountryName(randomCountry.name.toLocaleLowerCase());
     } else {
       console.error("No shape available");
     }
@@ -65,19 +70,21 @@ const Principal: React.FC = () => {
         country.name.toLowerCase().includes(value)
       );
       setSuggestions(filteredCountries);
+      setActiveIndex(-1);
     } else {
       setSuggestions([]);
+      setActiveIndex(-1);
     }
   };
 
   const handleSuggestionClick = (name: string) => {
     setInputValue(name);
     setSuggestions([]);
+    setActiveIndex(-1);
   };
-
   const handleSubmit = () => {
     if (inputValue.toLowerCase() === countryName) {
-      setMessage("Correct!");
+      console.log("Correct!");
       selectRandomCountry(countries);
     } else {
       alert("Wrong! Try again.");
@@ -85,11 +92,16 @@ const Principal: React.FC = () => {
 
     setInputValue("");
     setSuggestions([]);
+    inputRef.current?.focus();
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSubmit();
+      if (activeIndex !== -1 && suggestions[activeIndex]) {
+        handleSuggestionClick(suggestions[activeIndex].name);
+      } else {
+        handleSubmit();
+      }
     }
   };
 
@@ -99,7 +111,23 @@ const Principal: React.FC = () => {
         <img className="logo" src={icons.logo} alt="Logo" />
         <div className="icon-list">
           <img className="podium" src={icons.podium} alt="Podium" />
-          <img className="graph" src={icons.graph} alt="Graph" />
+
+          <Popup
+            trigger={<img className="graph" src={icons.graph} alt="Graph" />} modal nested>
+            <Ranking />
+          </Popup>
+
+          {/* <Popup trigger={<button> Click to open modal </button>} modal nested>
+            {(close) => (
+              <div className="modal">
+                <div className="content">Welcome to GFG!!!</div>
+                <div>
+                  <button onClick={() => close()}>Close modal</button>
+                </div>
+              </div>
+            )}
+          </Popup> */}
+
           <img className="settings" src={icons.settings} alt="Settings" />
           <img className="info" src={icons.info} alt="Info" />
         </div>
@@ -113,7 +141,6 @@ const Principal: React.FC = () => {
             <p>No shape available</p>
           )}
 
-          {/* Input pentru răspuns */}
           <div className="input-wrapper">
             <input
               className="input"
@@ -122,8 +149,10 @@ const Principal: React.FC = () => {
               value={inputValue}
               onChange={handleInputChange}
               onKeyUp={handleKeyPress}
+              autoFocus
+              ref={inputRef}
             />
-            {/* Afișarea sugestiilor */}
+
             {suggestions.length > 0 && (
               <ul className="suggestions">
                 {suggestions.map((country) => (
@@ -142,7 +171,7 @@ const Principal: React.FC = () => {
           <button className="submit" onClick={handleSubmit}>
             Submit
           </button>
-          <p className="message">{message}</p>
+          <p className="message"></p>
         </header>
       </div>
     </>
