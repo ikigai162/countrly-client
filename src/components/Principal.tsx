@@ -1,4 +1,5 @@
 import React, { useEffect, useState, KeyboardEvent, useRef } from "react";
+import axios from "axios";
 import Popup from "reactjs-popup";
 
 import { icons } from "../img/constants";
@@ -6,6 +7,7 @@ import Indications from "../constants/Indications";
 import Ranking from "./Ranking";
 
 import "./Principal.css";
+import greenBtn from "./../constants/GreenBtn";
 
 interface Shape {
   id: number;
@@ -33,6 +35,7 @@ const Principal: React.FC = () => {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<Country[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetch("https://exciting-wonder-production.up.railway.app/country")
@@ -56,6 +59,7 @@ const Principal: React.FC = () => {
       const base64Image = `data:image/png;base64,${randomCountry.shape.image}`;
       setCurrentShape(base64Image);
       setCountryName(randomCountry.name.toLocaleLowerCase());
+      setTargetCountry(randomCountry.name.toLocaleLowerCase());
     } else {
       console.error("No shape available");
     }
@@ -101,8 +105,44 @@ const Principal: React.FC = () => {
         handleSuggestionClick(suggestions[activeIndex].name);
       } else {
         handleSubmit();
+        /* handleFetchDistance(); */
       }
     }
+  };
+
+  const handlePopUp = () => {};
+
+  const [userInputCountry, setUserInputCountry] = useState("");
+  const [targetCountry, setTargetCountry] = useState("");
+  const [data, setData] = useState(null);
+
+  const handleFetchDistance = async () => {
+    setTargetCountry(selectRandomCountry.name);
+    console.log("Input value (userInputCountry):", inputValue);
+    console.log("Target country (targetCountry):", targetCountry);
+
+    if (!inputValue || !targetCountry) {
+      console.error("Both user input and target country failed.");
+      return;
+    }
+
+    const url = `https://exciting-wonder-production.up.railway.app/location/get-info-between-countries?userInputCountry=${encodeURIComponent(
+      inputValue
+    )}&targetCountry=${encodeURIComponent(targetCountry)}`;
+    console.log("Generated URL:", url);
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Distance between countries:", data.distance);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+    handleSubmit();
   };
 
   return (
@@ -113,7 +153,10 @@ const Principal: React.FC = () => {
           <img className="podium" src={icons.podium} alt="Podium" />
 
           <Popup
-            trigger={<img className="graph" src={icons.graph} alt="Graph" />} modal nested>
+            trigger={<img className="graph" src={icons.graph} alt="Graph" />}
+            modal
+            nested
+          >
             <Ranking />
           </Popup>
 
@@ -168,7 +211,7 @@ const Principal: React.FC = () => {
           </div>
 
           <Indications />
-          <button className="submit" onClick={handleSubmit}>
+          <button className="submit" onClick={handleFetchDistance}>
             Submit
           </button>
           <p className="message"></p>
