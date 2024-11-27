@@ -6,9 +6,13 @@ import logo from "./../img/COUNTRLY.SVG";
 import vector1 from "./../img/vector1.png";
 
 import up from "./../img/up.png";
-import up_left from "./../img/up-left.png";
-import down_right from "./../img/down-right.png";
 import right from "./../img/right.png";
+import down from "./../img/down.png";
+import left from "./../img/left.png";
+import up_left from "./../img/up-left.png";
+import up_right from "./../img/up_right.png";
+import down_right from "./../img/down-right.png";
+import down_left from "./../img/down_left.png";
 
 import Italy from "./../img/Italy.png";
 import Azerbaidjan from "./../img/Azerbaidjan.png";
@@ -30,6 +34,10 @@ export const icons = {
   up_left,
   down_right,
   right,
+  down,
+  left,
+  up_right,
+  down_left,
   Italy,
   Azerbaidjan,
   France,

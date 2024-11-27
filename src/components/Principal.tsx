@@ -2,9 +2,10 @@ import React, { useEffect, useState, KeyboardEvent, useRef } from "react";
 import axios from "axios";
 import Popup from "reactjs-popup";
 
-import { icons } from "../img/constants";
+import { icons, indicationsData } from "../img/constants";
 import Indications from "../constants/Indications";
 import Ranking from "./Ranking";
+import "../constants/Indications.css";
 
 import "./Principal.css";
 import greenBtn from "./../constants/GreenBtn";
@@ -112,9 +113,10 @@ const Principal: React.FC = () => {
 
   const handlePopUp = () => {};
 
-  const [userInputCountry, setUserInputCountry] = useState("");
   const [targetCountry, setTargetCountry] = useState("");
-  const [data, setData] = useState(null);
+  const [distance, setDistance] = useState<number | null>(null);
+  const [direction, setDirection] = useState<string | null>(null);
+  const [data, setData] = useState<any>(null);
 
   const handleFetchDistance = async () => {
     setTargetCountry(selectRandomCountry.name);
@@ -137,13 +139,49 @@ const Principal: React.FC = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Distance between countries:", data.distance);
+      setData(data);
+      setDistance(data.distance);
+      setDirection(data.direction);
+      console.log("Distance between countries:", Math.round(data.distance));
+      console.log("Direction:", data.direction);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
 
+    useEffect(() => {
+      if (data !== null) {
+        console.log("data state has been updated:", data);
+      }
+    }, [data]);
+
     handleSubmit();
   };
+
+  const directionIcons: { [key: string]: string } = {
+    N: icons.up,
+    S: icons.down,
+    E: icons.right,
+    W: icons.left,
+    NE: icons.up_right,
+    NW: icons.up_left,
+    SE: icons.down_right,
+    SW: icons.down_left,
+  };
+
+  let imageElement: JSX.Element | null = null;
+
+if (data && directionIcons[data.direction]) {
+  imageElement = (
+    <img
+      src={directionIcons[data.direction]}
+      alt={data.direction}
+      style={{ width: "25px", height: "25px" }}
+    />
+  );
+} else if (data) {
+  imageElement = <p>Unknown direction: {data.direction}</p>;
+}
+
 
   return (
     <>
@@ -210,7 +248,31 @@ const Principal: React.FC = () => {
             )}
           </div>
 
-          <Indications />
+          <section className="indications">
+            {indicationsData.map((indication) => (
+              <>
+                <div className="indicator-main">
+                  <div key={indication.id} className="indicator">
+                    <img
+                      src={indication.country}
+                      alt={indication.label}
+                      className="flag"
+                    />
+                    <p className="country-name">
+                      {inputValue.charAt(0).toUpperCase() + inputValue.slice(1)}
+                    </p>
+                  </div>
+                  <div className="distance">
+                    {distance !== null && <p>{Math.round(distance)} km</p>}
+                  </div>
+                  <div className="direction">
+                    {<div className="direction-icon">{imageElement}</div>}
+                  </div>
+                </div>
+              </>
+            ))}
+          </section>
+
           <button className="submit" onClick={handleFetchDistance}>
             Submit
           </button>
