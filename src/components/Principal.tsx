@@ -1,6 +1,7 @@
 import React, { useEffect, useState, KeyboardEvent, useRef } from "react";
 import axios from "axios";
 import Popup from "reactjs-popup";
+import Flag from "react-world-flags";
 
 import { icons, indicationsData } from "../img/constants";
 import Indications from "../constants/Indications";
@@ -36,7 +37,6 @@ const Principal: React.FC = () => {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<Country[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetch("https://exciting-wonder-production.up.railway.app/country")
@@ -87,12 +87,17 @@ const Principal: React.FC = () => {
     setSuggestions([]);
     setActiveIndex(-1);
   };
+
   const handleSubmit = () => {
     if (inputValue.toLowerCase() === countryName) {
       console.log("Correct!");
       selectRandomCountry(countries);
+      setShowIndications(false);
+      setInputValue("");
+      /* setIndicationText(inputValue) */
     } else {
       alert("Wrong! Try again.");
+      setShowIndications(true);
     }
 
     setInputValue("");
@@ -106,7 +111,7 @@ const Principal: React.FC = () => {
         handleSuggestionClick(suggestions[activeIndex].name);
       } else {
         handleSubmit();
-        /* handleFetchDistance(); */
+        handleFetchDistance();
       }
     }
   };
@@ -117,11 +122,14 @@ const Principal: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [direction, setDirection] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
+  const [showIndications, setShowIndications] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleFetchDistance = async () => {
-    setTargetCountry(selectRandomCountry.name);
+    const randomCountry = countryName;
     console.log("Input value (userInputCountry):", inputValue);
-    console.log("Target country (targetCountry):", targetCountry);
+    console.log("Target country (targetCountry):", randomCountry);
 
     if (!inputValue || !targetCountry) {
       console.error("Both user input and target country failed.");
@@ -154,7 +162,11 @@ const Principal: React.FC = () => {
       }
     }, [data]);
 
+    setSuggestions([]);
+    inputRef.current?.focus();
     handleSubmit();
+    handleSuggestionClick(suggestions[activeIndex].name);
+    selectRandomCountry(countries);
   };
 
   const directionIcons: { [key: string]: string } = {
@@ -170,33 +182,33 @@ const Principal: React.FC = () => {
 
   let imageElement: JSX.Element | null = null;
 
-if (data && directionIcons[data.direction]) {
-  imageElement = (
-    <img
-      src={directionIcons[data.direction]}
-      alt={data.direction}
-      style={{ width: "25px", height: "25px" }}
-    />
-  );
-} else if (data) {
-  imageElement = <p>Unknown direction: {data.direction}</p>;
-}
+  if (data && directionIcons[data.direction]) {
+    imageElement = (
+      <img
+        src={directionIcons[data.direction]}
+        alt={data.direction}
+        style={{ width: "25px", height: "25px" }}
+      />
+    );
+  } else if (data) {
+    imageElement = <p>Unknown direction: {data.direction}</p>;
+  }
 
+  const inputText = inputValue;
 
   return (
     <>
       <div className="icon">
         <img className="logo" src={icons.logo} alt="Logo" />
         <div className="icon-list">
-          <img className="podium" src={icons.podium} alt="Podium" />
-
           <Popup
-            trigger={<img className="graph" src={icons.graph} alt="Graph" />}
+            trigger={<img className="podium" src={icons.podium} alt="Podium" />}
             modal
             nested
           >
             <Ranking />
           </Popup>
+          <img className="graph" src={icons.graph} alt="Graph" />
 
           {/* <Popup trigger={<button> Click to open modal </button>} modal nested>
             {(close) => (
@@ -248,30 +260,33 @@ if (data && directionIcons[data.direction]) {
             )}
           </div>
 
-          <section className="indications">
-            {indicationsData.map((indication) => (
-              <>
-                <div className="indicator-main">
-                  <div key={indication.id} className="indicator">
-                    <img
+          {showIndications && (
+            <section className="indications">
+              {indicationsData.map((indication) => (
+                <>
+                  <div className="indicator-main">
+                    <div key={indication.id} className="indicator">
+                      {/* <img
                       src={indication.country}
                       alt={indication.label}
                       className="flag"
-                    />
-                    <p className="country-name">
-                      {inputValue.charAt(0).toUpperCase() + inputValue.slice(1)}
-                    </p>
+                    /> */}
+                      <p className="country-name">
+                        {inputValue.charAt(0).toUpperCase() +
+                          inputValue.slice(1)}
+                      </p>
+                    </div>
+                    <div className="distance">
+                      {distance !== null && <p>{Math.round(distance)} km</p>}
+                    </div>
+                    <div className="direction">
+                      {<div className="direction-icon">{imageElement}</div>}
+                    </div>
                   </div>
-                  <div className="distance">
-                    {distance !== null && <p>{Math.round(distance)} km</p>}
-                  </div>
-                  <div className="direction">
-                    {<div className="direction-icon">{imageElement}</div>}
-                  </div>
-                </div>
-              </>
-            ))}
-          </section>
+                </>
+              ))}
+            </section>
+          )}
 
           <button className="submit" onClick={handleFetchDistance}>
             Submit
