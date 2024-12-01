@@ -10,7 +10,6 @@ function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const [responseMessage, setResponseMessage] = useState<string | null>(null);
 
   const toggleForm = () => {
     setIsActive(!isActive); // Alternează între Login și Register
@@ -31,12 +30,10 @@ function Register() {
         headers: { "Content-Type": "application/json" },
       });
       console.log("API Response:", response.data);
-      setResponseMessage(response.data.message || "Success!");
     } catch (error: any) {
       console.error("Error:", error);
       const message =
         error.response?.data?.message || "A apărut o eroare. Încercați din nou.";
-      setResponseMessage(message);
     }
   };
 
@@ -114,7 +111,6 @@ function Register() {
         </div>
       </div>
 
-      {responseMessage && <p className="response-message">{responseMessage}</p>}
     </>
   );
 }

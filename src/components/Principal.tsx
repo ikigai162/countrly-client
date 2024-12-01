@@ -4,12 +4,10 @@ import Popup from "reactjs-popup";
 import Flag from "react-world-flags";
 
 import { icons, indicationsData } from "../img/constants";
-import Indications from "../constants/Indications";
 import Ranking from "./Ranking";
 import "../constants/Indications.css";
 
 import "./Principal.css";
-import greenBtn from "./../constants/GreenBtn";
 
 interface Shape {
   id: number;
@@ -82,6 +80,8 @@ const Principal: React.FC = () => {
     }
   };
 
+  const [lastInputValue, setLastInputValue] = useState<string>("");
+
   const handleSuggestionClick = (name: string) => {
     setInputValue(name);
     setSuggestions([]);
@@ -91,12 +91,13 @@ const Principal: React.FC = () => {
   const handleSubmit = () => {
     if (inputValue.toLowerCase() === countryName) {
       console.log("Correct!");
+      setLastInputValue(inputValue);
       selectRandomCountry(countries);
       setShowIndications(false);
       setInputValue("");
-      /* setIndicationText(inputValue) */
     } else {
       alert("Wrong! Try again.");
+      setLastInputValue(inputValue);
       setShowIndications(true);
     }
 
@@ -116,15 +117,15 @@ const Principal: React.FC = () => {
     }
   };
 
-  const handlePopUp = () => {};
-
   const [targetCountry, setTargetCountry] = useState("");
   const [distance, setDistance] = useState<number | null>(null);
   const [direction, setDirection] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
   const [showIndications, setShowIndications] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false);
+
+  const openPopup = () => setIsOpen(true);
+  const closePopup = () => setIsOpen(false);
 
   const handleFetchDistance = async () => {
     const randomCountry = countryName;
@@ -194,32 +195,21 @@ const Principal: React.FC = () => {
     imageElement = <p>Unknown direction: {data.direction}</p>;
   }
 
-  const inputText = inputValue;
-
   return (
     <>
       <div className="icon">
         <img className="logo" src={icons.logo} alt="Logo" />
         <div className="icon-list">
-          <Popup
-            trigger={<img className="podium" src={icons.podium} alt="Podium" />}
-            modal
-            nested
-          >
-            <Ranking />
+          <img
+            className="podium"
+            src={icons.podium}
+            alt="Podium"
+            onClick={openPopup}
+          />
+          <Popup open={isOpen} onClose={closePopup} modal nested>
+            <Ranking closePopup={closePopup} />
           </Popup>
           <img className="graph" src={icons.graph} alt="Graph" />
-
-          {/* <Popup trigger={<button> Click to open modal </button>} modal nested>
-            {(close) => (
-              <div className="modal">
-                <div className="content">Welcome to GFG!!!</div>
-                <div>
-                  <button onClick={() => close()}>Close modal</button>
-                </div>
-              </div>
-            )}
-          </Popup> */}
 
           <img className="settings" src={icons.settings} alt="Settings" />
           <img className="info" src={icons.info} alt="Info" />
@@ -271,10 +261,10 @@ const Principal: React.FC = () => {
                       alt={indication.label}
                       className="flag"
                     /> */}
-                      <p className="country-name">
-                        {inputValue.charAt(0).toUpperCase() +
-                          inputValue.slice(1)}
-                      </p>
+                        <p className="country-name">
+                          {lastInputValue.charAt(0).toUpperCase() +
+                            lastInputValue.slice(1)}
+                        </p>
                     </div>
                     <div className="distance">
                       {distance !== null && <p>{Math.round(distance)} km</p>}
