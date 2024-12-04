@@ -6,9 +6,9 @@ function Users() {
   const [users, setUsers] = useState<
     Array<{ username: string; rating: number }>
   >([]);
-  const [currentPage, setCurrentPage] = useState(0); // Indexul paginii curente
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc"); // Ordinea sortării
-  const usersPerPage = 6; // Numărul de utilizatori afișați pe pagină
+  const [currentPage, setCurrentPage] = useState(0);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const usersPerPage = 6;
 
   useEffect(() => {
     fetch("https://exciting-wonder-production.up.railway.app/country/all")
@@ -22,12 +22,11 @@ function Users() {
       })
       .then((data) => {
         console.log("Ranking data", data);
-        setUsers(data); // presupunând că `data` este un array de utilizatori
+        setUsers(data);
       })
       .catch((error) => console.error("Error at fetching data", error));
   }, []);
 
-  // Sortează utilizatorii după rating în funcție de `sortOrder`
   const sortedUsers = [...users].sort((a, b) => {
     if (sortOrder === "asc") {
       return a.rating - b.rating;
@@ -36,14 +35,12 @@ function Users() {
     }
   });
 
-  // Calculează utilizatorii care vor fi afișați pe pagina curentă
   const startIndex = currentPage * usersPerPage;
   const displayedUsers = sortedUsers.slice(
     startIndex,
     startIndex + usersPerPage
   );
 
-  // Funcții pentru schimbarea paginii
   const handleNextPage = () => {
     if (startIndex + usersPerPage < users.length) {
       setCurrentPage(currentPage + 1);
@@ -56,7 +53,6 @@ function Users() {
     }
   };
 
-  // Funcția pentru schimbarea ordinii sortării
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
@@ -84,19 +80,18 @@ function Users() {
         ))}
       </div>
 
-      {/* Butoane pentru navigare */}
       <div className="pagination-buttons">
         <button
           className="previous"
           onClick={handlePrevPage}
-          disabled={currentPage === 0} // Dezactivează butonul dacă ești pe prima pagină
+          disabled={currentPage === 0}
         >
           Previous
         </button>
         <button
           className="next"
           onClick={handleNextPage}
-          disabled={startIndex + usersPerPage >= users.length} // Dezactivează butonul dacă nu mai sunt utilizatori
+          disabled={startIndex + usersPerPage >= users.length}
         >
           Next
         </button>
