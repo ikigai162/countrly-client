@@ -49,11 +49,4 @@ export const icons = {
 
 export const indicationsData = [
   { id: 1, icon: icons.up, label: "Italy", country: icons.Italy, distance: 3 },
-  {
-    id: 2,
-    icon: icons.up_left,
-    label: "Azerbaidjan",
-    country: icons.Azerbaidjan,
-    distance: 756,
-  },
 ];

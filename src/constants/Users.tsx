@@ -3,9 +3,7 @@ import { icons } from "../img/constants";
 import "./Users.css";
 
 function Users() {
-  const [users, setUsers] = useState<
-    Array<{ username: string; rating: number }>
-  >([]);
+  const [users, setUsers] = useState<Array<{ username: string; rating: number }>>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const usersPerPage = 6;

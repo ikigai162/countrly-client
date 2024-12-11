@@ -3,12 +3,10 @@ import axios from "axios";
 import Popup from "reactjs-popup";
 
 import { icons, indicationsData } from "../img/constants";
-import Indications from "../constants/Indications";
 import Ranking from "./Ranking";
 import "../constants/Indications.css";
 
 import "./Principal.css";
-import greenBtn from "./../constants/GreenBtn";
 
 interface Shape {
   id: number;
@@ -106,7 +104,7 @@ const Principal: React.FC = () => {
         handleSuggestionClick(suggestions[activeIndex].name);
       } else {
         handleSubmit();
-        /* handleFetchDistance(); */
+        handleFetchDistance();
       }
     }
   };
@@ -117,14 +115,25 @@ const Principal: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [direction, setDirection] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
+  const [showIndications, setShowIndications] = useState(false);
+  const [lastInputValue, setLastInputValue] = useState("");
+  const [countryFlag, setcountryFlag] = useState<string | null>(null);
 
   const handleFetchDistance = async () => {
-    setTargetCountry(selectRandomCountry.name);
-    console.log("Input value (userInputCountry):", inputValue);
-    console.log("Target country (targetCountry):", targetCountry);
-
     if (!inputValue || !targetCountry) {
       console.error("Both user input and target country failed.");
+      return;
+    }
+
+    if (inputValue.toLowerCase() === countryName.toLowerCase()) {
+      console.log("Correct!");
+      setShowIndications(false); 
+      setcountryFlag(null); 
+      setLastInputValue(inputValue);
+      selectRandomCountry(countries);
+      setInputValue("");
+      setSuggestions([]);
+      inputRef.current?.focus();
       return;
     }
 
@@ -144,17 +153,31 @@ const Principal: React.FC = () => {
       setDirection(data.direction);
       console.log("Distance between countries:", Math.round(data.distance));
       console.log("Direction:", data.direction);
+
+      // Fetch pentru steagul țării greșite
+      const countryResponse = await fetch(
+        `https://restcountries.com/v3.1/name/${encodeURIComponent(inputValue)}`
+      );
+      if (countryResponse.ok) {
+        const countryData = await countryResponse.json();
+        if (countryData && countryData[0]?.flags?.svg) {
+          setcountryFlag(countryData[0].flags.svg); // Setează URL-ul steagului
+        } else {
+          setcountryFlag(null); // Dacă nu există steag, resetează
+        }
+      } else {
+        setcountryFlag(null); // În cazul unei erori, resetează
+      }
+
+      setShowIndications(true); // Afișează indicațiile pentru răspuns greșit
+      setLastInputValue(inputValue);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
 
-    useEffect(() => {
-      if (data !== null) {
-        console.log("data state has been updated:", data);
-      }
-    }, [data]);
-
-    handleSubmit();
+    setInputValue("");
+    setSuggestions([]);
+    inputRef.current?.focus();
   };
 
   const directionIcons: { [key: string]: string } = {
@@ -170,45 +193,31 @@ const Principal: React.FC = () => {
 
   let imageElement: JSX.Element | null = null;
 
-if (data && directionIcons[data.direction]) {
-  imageElement = (
-    <img
-      src={directionIcons[data.direction]}
-      alt={data.direction}
-      style={{ width: "25px", height: "25px" }}
-    />
-  );
-} else if (data) {
-  imageElement = <p>Unknown direction: {data.direction}</p>;
-}
-
+  if (data && directionIcons[data.direction]) {
+    imageElement = (
+      <img
+        src={directionIcons[data.direction]}
+        alt={data.direction}
+        style={{ width: "25px", height: "25px" }}
+      />
+    );
+  } else if (data) {
+    imageElement = <p>Unknown direction: {data.direction}</p>;
+  }
 
   return (
     <>
       <div className="icon">
         <img className="logo" src={icons.logo} alt="Logo" />
         <div className="icon-list">
-          <img className="podium" src={icons.podium} alt="Podium" />
-
           <Popup
-            trigger={<img className="graph" src={icons.graph} alt="Graph" />}
+            trigger={<img className="podium" src={icons.podium} alt="Podium" />}
             modal
             nested
           >
             <Ranking />
           </Popup>
-
-          {/* <Popup trigger={<button> Click to open modal </button>} modal nested>
-            {(close) => (
-              <div className="modal">
-                <div className="content">Welcome to GFG!!!</div>
-                <div>
-                  <button onClick={() => close()}>Close modal</button>
-                </div>
-              </div>
-            )}
-          </Popup> */}
-
+          <img className="graph" src={icons.graph} alt="Graph" />
           <img className="settings" src={icons.settings} alt="Settings" />
           <img className="info" src={icons.info} alt="Info" />
         </div>
@@ -249,17 +258,25 @@ if (data && directionIcons[data.direction]) {
           </div>
 
           <section className="indications">
-            {indicationsData.map((indication) => (
-              <>
-                <div className="indicator-main">
-                  <div key={indication.id} className="indicator">
-                    <img
-                      src={indication.country}
-                      alt={indication.label}
-                      className="flag"
-                    />
+            {showIndications &&
+              indicationsData.map((indication) => (
+                <div className="indicator-main" key={indication.id}>
+                  <div className="indicator">
+                    {countryFlag && (
+                      <img
+                        src={countryFlag}
+                        alt={`Flag of ${lastInputValue}`}
+                        className="country-flag"
+                        style={{
+                          width: "50px",
+                          height: "30px",
+                          marginLeft: "10px",
+                        }}
+                      />
+                    )}
                     <p className="country-name">
-                      {inputValue.charAt(0).toUpperCase() + inputValue.slice(1)}
+                      {lastInputValue.charAt(0).toUpperCase() +
+                        lastInputValue.slice(1)}
                     </p>
                   </div>
                   <div className="distance">
@@ -269,14 +286,12 @@ if (data && directionIcons[data.direction]) {
                     {<div className="direction-icon">{imageElement}</div>}
                   </div>
                 </div>
-              </>
-            ))}
+              ))}
           </section>
 
           <button className="submit" onClick={handleFetchDistance}>
             Submit
           </button>
-          <p className="message"></p>
         </header>
       </div>
     </>

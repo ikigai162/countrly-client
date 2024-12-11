@@ -204,3 +204,10 @@ input {
 .suggestions li:hover {
   background-color: #f8f9fa;
 }
+
+
+.country-flag {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  object-fit: cover;
+}

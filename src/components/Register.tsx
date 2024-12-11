@@ -1,16 +1,57 @@
-import React, { useState } from "react";
+/* https://exciting-wonder-production.up.railway.app/auth/register */
+
+import React, { useEffect, useState } from "react";
 import BlueBtn from "../constants/BlueBtn";
 import GreenBtn from "../constants/GreenBtn";
 import { icons } from "../img/constants";
 
+import axios from "axios";
+
 import "./Register.css";
 
 function Register() {
-  const [isActive, setIsActive] = useState(false);
-
+  
   const toggleForm = () => {
     setIsActive(!isActive);
   };
+
+
+  const [isActive, setIsActive] = useState(false);
+  const [username, setUsername] = useState<string>("")
+  const [password, setPassword] = useState<any>()
+
+  const loginData = {
+    username: username,
+    password: password
+  }
+
+
+  useEffect(() => {
+    fetch('https://exciting-wonder-production.up.railway.app/auth/login', {
+    method: 'POST', // <--- Crucial change: Use POST
+    headers: {
+      'Content-Type': 'application/json' // Specify JSON content type
+    },
+    body: JSON.stringify(loginData) // Send login data as JSON
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP login error with status:${response.status}`)
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("login api response:", data)
+    })
+    .catch((error) => console.error("Error at fetching login data", error))
+  })
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const userName = e.target.value.toLowerCase()
+    setUsername(userName)
+  }
+
+  console.log(handleUsernameChange)
 
   return (
     <>
@@ -29,7 +70,7 @@ function Register() {
         <div className="form-container sign-in">
           <form>
             <h2>Sign In</h2>
-            <input type="email" placeholder="Username" />
+            <input type="email" placeholder="Username" onChange={handleUsernameChange}/>
             <input type="password" placeholder="Password" />
             <BlueBtn text="Sign in" />
           </form>
@@ -42,7 +83,6 @@ function Register() {
               <p>Sign up to play our game.</p>
               <GreenBtn
                 text="Sign In"
-                className="hidden"
                 onClick={toggleForm}
               />
             </div>
@@ -51,7 +91,6 @@ function Register() {
               <p>It’s nice to see you again.</p>
               <GreenBtn
                 text="Sign Up"
-                className="hidden"
                 onClick={toggleForm}
               />
             </div>
