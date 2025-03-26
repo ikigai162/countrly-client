@@ -44,9 +44,23 @@ export const icons = {
   Irland,
   baby,
   teen,
+<<<<<<< HEAD
   mustafa,
 };
 
 export const indicationsData = [
   { id: 1, icon: icons.up, label: "Italy", country: icons.Italy, distance: 3 },
+=======
+  mustafa
+};
+
+export const indicationsData = [
+  { id: 1, icon: icons.up, label: "Italy", distance: 3 },
+  {
+    id: 2,
+    icon: icons.up_left,
+    label: "Azerbaidjan",
+    distance: 756
+  }
+>>>>>>> bba4724 (Fixed some bugs)
 ];

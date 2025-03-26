@@ -205,9 +205,31 @@ input {
   background-color: #f8f9fa;
 }
 
+<<<<<<< HEAD
 
 .country-flag {
   border: 1px solid #ddd;
   border-radius: 5px;
   object-fit: cover;
+=======
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: #0056b3;
+>>>>>>> bba4724 (Fixed some bugs)
 }

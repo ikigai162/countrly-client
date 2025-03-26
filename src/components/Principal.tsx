@@ -37,7 +37,7 @@ const Principal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    fetch("https://exciting-wonder-production.up.railway.app/country")
+    fetch("http://localhost:8080/country")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error with status: ${response.status}`);
@@ -45,7 +45,6 @@ const Principal: React.FC = () => {
         return response.json();
       })
       .then((data) => {
-        /* console.log("API response: ", data); */
         setCountries(data);
         selectRandomCountry(data);
       })
@@ -80,17 +79,27 @@ const Principal: React.FC = () => {
     }
   };
 
+  const [lastInputValue, setLastInputValue] = useState<string>("");
+  const [showIndications, setShowIndications] = useState<boolean>(false);
+  const [countryFlag, setCountryFlag] = useState<string | null>(null);
+
   const handleSuggestionClick = (name: string) => {
     setInputValue(name);
     setSuggestions([]);
     setActiveIndex(-1);
   };
+
   const handleSubmit = () => {
     if (inputValue.toLowerCase() === countryName) {
       console.log("Correct!");
+      setLastInputValue(inputValue); // Salvează valoarea corectă
       selectRandomCountry(countries);
+      setShowIndications(false);
+      setInputValue("");
     } else {
       alert("Wrong! Try again.");
+      setLastInputValue(inputValue); // Salvează valoarea greșită pentru indicații
+      setShowIndications(true);
     }
 
     setInputValue("");
@@ -115,9 +124,6 @@ const Principal: React.FC = () => {
   const [distance, setDistance] = useState<number | null>(null);
   const [direction, setDirection] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
-  const [showIndications, setShowIndications] = useState(false);
-  const [lastInputValue, setLastInputValue] = useState("");
-  const [countryFlag, setcountryFlag] = useState<string | null>(null);
 
   const handleFetchDistance = async () => {
     if (!inputValue || !targetCountry) {
@@ -125,19 +131,7 @@ const Principal: React.FC = () => {
       return;
     }
 
-    if (inputValue.toLowerCase() === countryName.toLowerCase()) {
-      console.log("Correct!");
-      setShowIndications(false); 
-      setcountryFlag(null); 
-      setLastInputValue(inputValue);
-      selectRandomCountry(countries);
-      setInputValue("");
-      setSuggestions([]);
-      inputRef.current?.focus();
-      return;
-    }
-
-    const url = `https://exciting-wonder-production.up.railway.app/location/get-info-between-countries?userInputCountry=${encodeURIComponent(
+    const url = `http://localhost:8080/location/get-info-between-countries?userInputCountry=${encodeURIComponent(
       inputValue
     )}&targetCountry=${encodeURIComponent(targetCountry)}`;
     console.log("Generated URL:", url);
@@ -161,12 +155,12 @@ const Principal: React.FC = () => {
       if (countryResponse.ok) {
         const countryData = await countryResponse.json();
         if (countryData && countryData[0]?.flags?.svg) {
-          setcountryFlag(countryData[0].flags.svg); // Setează URL-ul steagului
+          setCountryFlag(countryData[0].flags.svg); // Setează URL-ul steagului
         } else {
-          setcountryFlag(null); // Dacă nu există steag, resetează
+          setCountryFlag(null); // Dacă nu există steag, resetează
         }
       } else {
-        setcountryFlag(null); // În cazul unei erori, resetează
+        setCountryFlag(null); // În cazul unei erori, resetează
       }
 
       setShowIndications(true); // Afișează indicațiile pentru răspuns greșit
