@@ -1,0 +1,45 @@
+.user-main{
+    font-family:'Montserat', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+.user-content{
+    display: flex;
+    justify-content: space-between;
+    gap: 26px;
+    padding-bottom: 19px;
+}
+.user-name{
+    display: flex;
+    width: 341px;
+    height: 36px;
+    background-color: #c4c4c4;
+    border-radius: 18px;
+    color: #000;
+    font-weight: 400;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.user-img{
+    display: flex;
+    justify-content: space-between;
+}
+.user-text{
+    padding: 0 120px 0 120px;
+}
+.user-rank{
+    display: flex;
+    width: 207px;
+    height: 36px;
+    background-color: #c4c4c4;
+    border-radius: 18px;
+    color: #000;
+    font-weight: 400;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

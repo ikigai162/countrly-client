@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+.greenBtn {
+    max-width: 293px;
+    max-height: 57px;
+    background: #3A5A40;
+    cursor: pointer;
+    width: 293px;
+    height: 57px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    border-style: none;
+    font-size: 25px;
+    font-family: 'Montserrat', sans-serif;
+}
