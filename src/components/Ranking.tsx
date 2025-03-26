@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import { icons } from "../img/constants";
-import Users from "./../constants/Users";
-import "./Ranking.css";
-
-function Ranking() {
-
-  
-=======
 import React, { useEffect } from "react";
 import Users from "../constants/Users";
 import "./Ranking.css";
@@ -29,24 +19,15 @@ function Ranking({ closePopup }: { closePopup: () => void }) {
       .catch((error) => console.error("Error at fetching data", error));
   }, []);
 
->>>>>>> bba4724 (Fixed some bugs)
   return (
     <div className="ranking">
       <h2 className="rank-title">Ranking</h2>
       <Users />
-<<<<<<< HEAD
-      {/* <button className="user-button">Close</button> */}
-=======
       <button className="user-button" onClick={closePopup}>
         Close
       </button>
->>>>>>> bba4724 (Fixed some bugs)
     </div>
   );
 }
 
-<<<<<<< HEAD
 export default Ranking;
-=======
-export default Ranking;
->>>>>>> bba4724 (Fixed some bugs)
