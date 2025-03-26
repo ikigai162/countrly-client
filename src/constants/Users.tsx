@@ -69,7 +69,7 @@ function Users() {
       </div>
 
       <div className="users-list">
-        {users.map((user, index) => (
+        {displayedUsers.map((user, index) => (
           <div className="user-content" key={index}>
             <div className="user-name">
               <img className="user-img" src={icons.baby} alt="icon" />

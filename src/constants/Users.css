@@ -1,17 +1,21 @@
-.user-main{
-    font-family:'Montserat', sans-serif;
+.user-main {
+    font-family: 'Montserat', sans-serif;
     display: flex;
     flex-direction: column;
     gap: 50px;
-}
-.user-content{
+  }
+  
+  .user-content {
     display: flex;
-    justify-content: space-between;
-    gap: 26px;
-    padding-bottom: 19px;
-}
-.user-name{
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+    gap: 50px;
+  }
+  
+  .user-name {
     display: flex;
+    align-items: center;
     width: 341px;
     height: 36px;
     background-color: #c4c4c4;
@@ -19,18 +23,26 @@
     color: #000;
     font-weight: 400;
     font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.user-img{
-    display: flex;
-    justify-content: space-between;
-}
-.user-text{
-    padding: 0 120px 0 120px;
-}
-.user-rank{
+    justify-content: flex-start;
+    padding-left: 10px;
+  }
+  
+  .user-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  
+  .user-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Adjust as needed */
+  }
+  
+  .user-rank {
+    margin-left: auto;
+    padding-left: 10px;
     display: flex;
     width: 207px;
     height: 36px;
@@ -39,7 +51,13 @@
     color: #000;
     font-weight: 400;
     font-size: 20px;
-    display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
+
+  .pagination-buttons{
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
