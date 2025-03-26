@@ -9,7 +9,6 @@ function Ranking() {
   
 =======
 import React, { useEffect } from "react";
-import { icons } from "../img/constants";
 import Users from "../constants/Users";
 import "./Ranking.css";
 

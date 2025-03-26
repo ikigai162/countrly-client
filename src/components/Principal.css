@@ -1,3 +1,4 @@
+/* Principal.css */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
@@ -21,7 +22,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   flex-direction: column;
 }
 
@@ -67,11 +68,13 @@ input {
   width: 166px;
   height: 60px;
 }
-.icon{
+
+.icon {
   display: flex;
   align-items: center;
   gap: 335px;
 }
+
 .icon-list {
   display: flex;
   padding: 20px 0 17px 0;
@@ -107,9 +110,6 @@ input {
   height: 46px;
 }
 
-
-
-
 .country {
   display: flex;
   align-items: center;
@@ -142,7 +142,7 @@ input {
   font-weight: normal;
 }
 
-.submit{
+.submit {
   text-transform: uppercase;
   width: 276px;
   height: 54px;
@@ -151,12 +151,12 @@ input {
   border-radius: 28px;
   border-style: none;
   cursor: pointer;
-  font-family:'Orbitron', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   font-size: 20px;
-  margin: 34px;
+  margin-top: 15px;
 }
 
-.submit:hover{
+.submit:hover {
   box-shadow: 0px 0px 100px #CFACFF;
   transition: 0.3s ease-in-out;
 }
@@ -164,7 +164,7 @@ input {
 .input-wrapper {
   position: relative;
   max-width: 400px;
-  margin: 20px auto;
+  margin: 0px auto;
   color: #000;
 }
 
@@ -232,4 +232,138 @@ button {
 button:hover {
   background-color: #0056b3;
 >>>>>>> bba4724 (Fixed some bugs)
+}
+
+body.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark-theme .container-principal {
+  background-color: #1e1e1e;
+}
+
+.dark-theme .header {
+  background-color: #1e1e1e;
+}
+
+.dark-theme .input {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.dark-theme .suggestions {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.dark-theme .indicator-main {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.dark-theme .submit:hover {
+  box-shadow: 0px 0px 30px #CFACFF;
+  transition: 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .container-principal {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .header-img {
+    width: 100%;
+    height: auto;
+    max-width: none;
+    max-height: none;
+  }
+
+  .input-wrapper {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .input {
+    width: 100%;
+    max-width: none;
+    max-height: none;
+  }
+
+  .icon {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .icon-list {
+    gap: 20px;
+  }
+
+  .submit {
+    width: 100%;
+    max-width: none;
+    margin: 20px 0;
+  }
+
+  .suggestions {
+    max-height: 200px;
+  }
+
+  .country {
+    width: 100%;
+    padding: 0 5px;
+  }
+
+  .distance {
+    padding: 7px 20px;
+  }
+}
+
+
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #3c4a57;
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: white;
+  width: 200px;
+}
+
+.theme-text {
+  font-size: 16px;
+  margin-right: 15px;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-button {
+  position: absolute;
+  width: 50%;
+  height: 80%;
+  border-radius: 12px;
+  background-color: white;
+  cursor: pointer;
+  border: none;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.toggle-button.off {
+  transform: translateX(0);
+}
+
+.toggle-button.on {
+  transform: translateX(100%);
+  background-color: #4cd964;
 }

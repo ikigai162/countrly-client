@@ -3,25 +3,17 @@ import { icons } from "../img/constants";
 import "./Users.css";
 
 function Users() {
-<<<<<<< HEAD
-  const [users, setUsers] = useState<Array<{ username: string; rating: number }>>([]);
-=======
   const [users, setUsers] = useState<
     Array<{
       [x: string]: any; username: string; rating: number 
 }>
   >([]);
->>>>>>> bba4724 (Fixed some bugs)
   const [currentPage, setCurrentPage] = useState(0);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const usersPerPage = 6;
 
   useEffect(() => {
-<<<<<<< HEAD
-    fetch("https://exciting-wonder-production.up.railway.app/country/all")
-=======
     fetch("http://localhost:8080/country/all")
->>>>>>> bba4724 (Fixed some bugs)
       .then((response) => {
         if (!response.ok) {
           throw new Error(
@@ -77,11 +69,7 @@ function Users() {
       </div>
 
       <div className="users-list">
-<<<<<<< HEAD
         {displayedUsers.map((user, index) => (
-=======
-        {users.map((user, index) => (
->>>>>>> bba4724 (Fixed some bugs)
           <div className="user-content" key={index}>
             <div className="user-name">
               <img className="user-img" src={icons.baby} alt="icon" />
@@ -114,8 +102,4 @@ function Users() {
   );
 }
 
-<<<<<<< HEAD
 export default Users;
-=======
-export default Users;
->>>>>>> bba4724 (Fixed some bugs)
