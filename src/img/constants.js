@@ -50,6 +50,7 @@ export const icons = {
 
 export const indicationsData = [
   { id: 1, icon: icons.up, label: "Italy", country: icons.Italy, distance: 3 },
+<<<<<<< HEAD
 =======
   mustafa
 };
@@ -63,4 +64,6 @@ export const indicationsData = [
     distance: 756
   }
 >>>>>>> bba4724 (Fixed some bugs)
+=======
+>>>>>>> d83a8f93fbdea21912254d650edc33316d5d6b97
 ];
